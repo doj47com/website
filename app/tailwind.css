@@ -38,3 +38,7 @@ h2 {
 h3 {
   @apply text-lg font-semibold my-2
 }
+
+a {
+  @apply text-indigo-500
+}
