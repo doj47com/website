@@ -27,6 +27,14 @@ cite {
   @apply text-sm text-gray-500
 }
 
+h1 {
+  @apply text-2xl font-semibold my-2
+}
+
 h2 {
-  @apply text-2xl font-semibold mb-4
+  @apply text-xl font-semibold my-2
+}
+
+h3 {
+  @apply text-lg font-semibold my-2
 }
