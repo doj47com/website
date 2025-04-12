@@ -23,17 +23,17 @@ export default function Index() {
     </section>
     <section>
       <h2>Cases</h2>
-      <p>A list or overview of recent and historic DOJ cases related to administration 47.</p>
+      <p>Learn about <a href="/cases/">cases brought by or against the Trump government</a>.</p>
     </section>
 
     <section>
       <h2>Firms</h2>
-      <p>Explore the law firms involved in ongoing or past cases.</p>
+      <p>Learn about <a href="/firms/">law firms that have resisted</a> (or not!) the Trump administration.</p>
     </section>
 
     <section>
       <h2>Lawyers</h2>
-      <p>Profiles of attorneys featured prominently in DOJ 47 proceedings.</p>
+      <p>Are <a href="/lawyers/">Trump administration lawyers</a> covering themselves in glory?</p>
     </section>
   </Frame>;
 }

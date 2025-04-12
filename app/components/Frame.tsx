@@ -9,13 +9,13 @@ export default function Frame({ children }) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="text-xl font-bold tracking-tight text-indigo-600"><a href="/">DOJ 47</a></div>
+            <div className="text-xl font-bold tracking-tight"><a href="/" className="text-zinc-900">DOJ 47</a></div>
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex space-x-6 text-sm font-medium">
-              <a href="/cases" className="text-gray-700 hover:text-indigo-600">Cases</a>
-              <a href="/firms" className="text-gray-700 hover:text-indigo-600">Firms</a>
-              <a href="/lawyers" className="text-gray-700 hover:text-indigo-600">Lawyers</a>
+              <a href="/cases" className="text-gray-700">Cases</a>
+              <a href="/firms" className="text-gray-700">Firms</a>
+              <a href="/lawyers" className="text-gray-700">Lawyers</a>
             </nav>
 
             {/* Mobile Hamburger */}
