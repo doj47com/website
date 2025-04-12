@@ -10,3 +10,23 @@ body {
     color-scheme: dark;
   }
 }
+
+section {
+  @apply pb-6
+}
+
+blockquote {
+  @apply bg-white border-l-4 border-zinc-500 ml-4 pl-4 pr-4 py-4 mb-2 shadow-sm rounded-md
+}
+
+p {
+  @apply pb-2 text-gray-600
+}
+
+cite {
+  @apply text-sm text-gray-500
+}
+
+h2 {
+  @apply text-2xl font-semibold mb-4
+}
