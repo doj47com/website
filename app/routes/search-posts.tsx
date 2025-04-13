@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { MetaFunction } from "@remix-run/node";
 import Frame from '../components/Frame';
 
@@ -62,7 +62,24 @@ export default function Index() {
   return <Frame>
     <SearchBox onChange={(value) => setValue(value)}/>
 
-    Value is: {value}
+    <p>
+      Value is: {value}
+    </p>
+
+    <p>Results are:</p>
+    {results.map(result => {
+      const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
+      return <React.Fragment key={result.uri}>
+        <div>
+          Post by {result.author.displayName} on {result.record.createdAt}
+          <br/><a href={uri}>see on Bluesky</a>
+        </div>
+      </React.Fragment>
+    })}
+    <pre>
+    </pre>
+
+
   </Frame>;
 }
 
