@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return <Frame>
     <section>
-      <p>The Trump administration quickly made clear that if you work for the DOJ, you are not one of America's lawyers, but one of Trump's lawyers:</p>
+      <p>If you work for the Department of Justice, you are not one of America's lawyers, but one of Trump's lawyers.</p>
       <div class='floating-quotes'>
         <blockquote>
           <div>
@@ -25,7 +25,7 @@ export default function Index() {
           <cite>US Attorney for District of Columbia Ed Martin, 2025-02-24, <a href="https://x.com/USAO_DC/status/1894119675786621225">tweet</a></cite>
         </blockquote>
       </div>
-      <p>As it turns out, if you work for some Big Law firms, you might be one of his lawyers, too!</p>
+      <p>It turns out, if you work for some Big Law firms, you might be one of his lawyers, too!</p>
       <p>This website tracks the Trump administration's use of the courts during his second presidency.</p>
     </section>
     <section>
