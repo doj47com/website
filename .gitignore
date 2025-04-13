@@ -1,5 +1,5 @@
 node_modules
-
+doj47.sqlite*
 /.cache
 /build
 .env

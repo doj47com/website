@@ -12,7 +12,7 @@ export default function Index() {
   return <Frame>
     <section>
       <p>If you work for the Department of Justice, you are not one of America's lawyers, but one of Trump's lawyers.</p>
-      <div class='floating-quotes'>
+      <div className='floating-quotes'>
         <blockquote>
           <div>
             When Department of Justice attorneys, for example, refuse to advance good-faith arguments by declining to appear in court or sign briefs, it undermines the constitutional order and deprives the President of the benefit of his lawyers.
