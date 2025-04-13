@@ -16,7 +16,7 @@ section {
 }
 
 blockquote {
-  @apply bg-white border-l-4 border-zinc-500 ml-4 pl-4 pr-4 py-4 mb-2 shadow-sm rounded-md
+  @apply bg-white border-l-4 border-zinc-500 ml-4 pl-4 pr-4 py-4 mb-2 shadow-sm rounded-md max-w-2xl
 }
 
 p {
