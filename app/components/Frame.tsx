@@ -16,6 +16,7 @@ export default function Frame({ children }) {
               <a href="/cases" className="text-gray-700">Cases</a>
               <a href="/firms" className="text-gray-700">Firms</a>
               <a href="/lawyers" className="text-gray-700">Lawyers</a>
+              <a href="/about" className="text-gray-700">About</a>
             </nav>
 
             {/* Mobile Hamburger */}
@@ -43,9 +44,10 @@ export default function Frame({ children }) {
           {/* Mobile Nav */}
           {mobileMenuOpen && (
             <nav className="md:hidden mt-2 space-y-1 text-sm font-medium bg-white border-t border-gray-100 py-2">
-              <a href="#cases" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cases</a>
-              <a href="#firms" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Firms</a>
-              <a href="#lawyers" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Lawyers</a>
+              <a href="/cases" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cases</a>
+              <a href="/firms" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Firms</a>
+              <a href="/lawyers" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Lawyers</a>
+              <a href="/about" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">About</a>
             </nav>
           )}
         </div>
