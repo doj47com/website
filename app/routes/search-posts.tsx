@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from "react-router-dom";
 import type { MetaFunction } from "@remix-run/node";
 import Frame from '../components/Frame';
 
@@ -31,10 +32,17 @@ function SearchBox(props: { onChange: (x: string) => void }) {
 }
 
 export default function Index() {
-  const [value, setValue] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [value, setValue] = useState(searchParams.get('q') || '');
   const [results, setResults] = useState([]);
 
   useEffect(() => {
+    if (value) {
+      setSearchParams({ q: value });
+    } else {
+      setSearchParams({});
+    }
+
     if (value === '') {
       setResults([]);
       return;
