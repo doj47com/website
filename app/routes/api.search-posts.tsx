@@ -7,6 +7,31 @@ import path from "path";
 const dbPath = path.resolve("doj47.sqlite");
 const db = new Database(dbPath, { readonly: true });
 
+export async function resolveHandleToDID(handle: string): Promise<string | null> {
+  const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(handle)}`;
+
+  try {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      console.warn(`Failed to resolve handle: ${res.status}`);
+      return null;
+    }
+
+    const data = await res.json();
+
+    if (data.did) {
+      return data.did as string;
+    } else {
+      console.warn(`No DID found in response for handle ${handle}`);
+      return null;
+    }
+  } catch (err) {
+    console.error(`Error resolving handle '${handle}':`, err);
+    return null;
+  }
+}
+
 function search(query: string, ...params: unknown[]) {
   const stmt = db.prepare(query);
   const rows = stmt.all(...params);
@@ -42,6 +67,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     let did = profile;
     // If profile is not a did, we'll need to translate it using
     // https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=cldellow.com
+    if (!profile.startsWith('did:'))
+      did = await resolveHandleToDID(profile);
 
     const uri = `at://${did}/app.bsky.feed.post/${rkey}`;
     return search(`SELECT json FROM posts WHERE uri = ?`, uri);
