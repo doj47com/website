@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-function SearchBox(props: { onChange: (x: string) => void }) {
+function SearchBox(props: { value: string; onChange: (x: string) => void }) {
   return (
     <div className="max-w-md mx-auto">
       <div className="relative">
@@ -19,6 +19,7 @@ function SearchBox(props: { onChange: (x: string) => void }) {
           type="text"
           placeholder="Search..."
           className="w-full pl-10 pr-4 py-2 rounded-2xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+          value={props.value}
           onChange={(e) => props.onChange(e.target.value)}
         />
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -69,7 +70,7 @@ export default function Index() {
     };
   }, [value]);
   return <Frame>
-    <SearchBox onChange={(value) => setValue(value)}/>
+    <SearchBox value={value} onChange={(value) => setValue(value)}/>
 
     <p>
       Value is: {value}
