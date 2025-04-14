@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from "react-router-dom";
 import type { MetaFunction } from "@remix-run/node";
 import Frame from '../components/Frame';
+import CopyButton from '../components/CopyButton';
 
 export const meta: MetaFunction = () => {
   return [
@@ -78,16 +79,12 @@ export default function Index() {
     {results.map(result => {
       const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
       return <React.Fragment key={result.uri}>
-        <div>
-          Post by {result.author.displayName} on {result.record.createdAt}
-          <br/><a href={uri}>see on Bluesky</a>
+        <div className='mb-4'>
+          <a target='_blank' href={uri}>Post by {result.author.displayName}</a> on {result.record.createdAt}
+          <br/><CopyButton text={JSON.stringify(result)}/>
         </div>
       </React.Fragment>
     })}
-    <pre>
-    </pre>
-
-
   </Frame>;
 }
 
