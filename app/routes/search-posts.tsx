@@ -73,6 +73,18 @@ export default function Index() {
       <li>a <a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3A24vynkvx5iwtjo4tokbkyqpx%2Fpost%2F3llgzp5ug2s22">Bluesky post URL (DID)</a></li>
       <li>a <a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Ffolderalconspiracy.bsky.social%2Fpost%2F3llgzp5ug2s22">Bluesky post URL (handle)</a></li>
     </ul>
+    <hr/>
+    <p>Example posts for testing the renderer:</p>
+    <ul>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3A756gaaeewovgn4axja34ajne%2Fpost%2F3lmk6frgjjs2y">text</a></li>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fgabrielmalor.bsky.social%2Fpost%2F3lmk6qxhogt2y">text with image</a></li>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Avrmx2e5gsi23srsy2n7vljvb%2Fpost%2F3lmjvr6tcv22y">text with two images</a></li>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Anwnlnixtjh3qhkwpz2uy5uwv%2Fpost%2F3lmk2brme3c25">text with external URL</a></li>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3A4llrhdclvdlmmynkwsmg5tdc%2Fpost%2F3lmdcovngwg2f">text with video</a></li>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3A24vynkvx5iwtjo4tokbkyqpx%2Fpost%2F3llgzp5ug2s22">QT: text on text</a></li>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Ayokssolxkvz4lobktvx6yvxb%2Fpost%2F3lmki6jowhs2u">QT: image on text</a></li>
+      <li><a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Adlmur6emtjntr5n5qysgrdos%2Fpost%2F3lmk5kri4xk2s">QT: text on external URL</a></li>
+    </ul>
 
   </Frame>;
 }
