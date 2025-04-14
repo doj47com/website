@@ -66,6 +66,14 @@ export default function Index() {
         </div>
       </React.Fragment>
     })}
+
+    <hr/>
+    <p>You can search for a term, or copy/paste a Bluesky URL. Examples:</p>
+    <ul>
+      <li>a <a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3A24vynkvx5iwtjo4tokbkyqpx%2Fpost%2F3llgzp5ug2s22">Bluesky post URL (DID)</a></li>
+      <li>a <a href="/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Ffolderalconspiracy.bsky.social%2Fpost%2F3llgzp5ug2s22">Bluesky post URL (handle)</a></li>
+    </ul>
+
   </Frame>;
 }
 
