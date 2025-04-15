@@ -4,6 +4,7 @@ import type { MetaFunction } from "@remix-run/node";
 import Frame from '../components/Frame';
 import CopyButton from '../components/CopyButton';
 import SearchBox from '../components/SearchBox';
+import Post from '../components/Post';
 
 export const meta: MetaFunction = () => {
   return [
@@ -63,7 +64,9 @@ export default function Index() {
         <div className='mb-4'>
           <a target='_blank' href={uri}>Post by {result.author.displayName}</a> on {result.record.createdAt}
           <br/><CopyButton text={JSON.stringify(result)}/>
+          <Post post={result}/>
         </div>
+        <hr/>
       </React.Fragment>
     })}
 
