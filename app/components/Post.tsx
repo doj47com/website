@@ -8,6 +8,13 @@ function formatDate(iso: string) {
   });
 }
 
+type External = {
+  uri: string;
+  thumb: string;
+  title: string;
+  description: string;
+};
+
 function Tweet({
   author,
   text,
@@ -20,6 +27,7 @@ function Tweet({
   createdAt: string;
   images?: string[];
   children?: React.ReactNode;
+  external?: External;
 }) {
   return (
     <div className="border border-gray-300 rounded-xl p-4 mb-2 text-sm bg-white shadow-sm">
@@ -35,6 +43,15 @@ function Tweet({
         </div>
       </div>
       <div className="whitespace-pre-wrap mb-3">{text}</div>
+      {external && (
+        <a href="https://www.stevevladeck.com/p/141-abrego-garcia-and-the-presumption" class="block border rounded-lg overflow-hidden hover:bg-gray-50 transition">
+          <img src="https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:nwnlnixtjh3qhkwpz2uy5uwv/bafkreicfsu7sscoxvkxpfqwlz5bwm5k52watebwvfi5kuy3pzybducdvda@jpeg" alt="embed" class="w-full object-cover max-h-48" />
+          <div class="p-3">
+            <div class="font-semibold text-gray-900">141. Abrego Garcia and the Presumption of Regularity</div>
+            <div class="text-gray-600 text-sm mt-1">How one reads Thursday's ruling ordering the federal government to "facilitate" Abrego Garcia's return depends upon how much (or how little) one expects *this* administration to turn square corners.</div>
+          </div>
+        </a>
+      )}
       {images && images.length > 0 && (
         <div className="grid grid-cols-2 gap-2 mb-3">
           {images.map((src, idx) => (
@@ -62,6 +79,12 @@ export default function Post(props: Props) {
   let subtweet = null;
   //console.log(post.embed.record.embeds);
   console.log(post.embed);
+
+  let external: External;
+  if (post.embed?.$type === 'app.bsky.embed.external#view') {
+    external = post.embed.external;
+  }
+
   // app.bsky.embed.record#view
   if (post.embed?.$type === 'app.bsky.embed.record#view') {
     console.log(post.embed);
@@ -73,6 +96,7 @@ export default function Post(props: Props) {
       }}
       createdAt={post.embed.record.value.createdAt}
       text={post.embed.record.value.text}
+      external={external}
     />
   }
 
@@ -91,6 +115,7 @@ export default function Post(props: Props) {
       createdAt={post.record.createdAt}
       text={post.record.text}
       images={images}
+      external={external}
     >
       {subtweet}
     </Tweet>

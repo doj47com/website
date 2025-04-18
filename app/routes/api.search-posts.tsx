@@ -60,7 +60,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const m = bskyUrlRe.exec(q);
 
   if (m) {
-    console.log(m);
     const profile = m[1];
     const rkey = m[2];
 
