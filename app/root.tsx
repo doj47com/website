@@ -20,6 +20,10 @@ export const links: LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  {
+    rel: 'stylesheet',
+    href: 'https://vjs.zencdn.net/8.10.0/video-js.css',
+  }
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -35,6 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
       </body>
     </html>
   );

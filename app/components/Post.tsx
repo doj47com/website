@@ -15,6 +15,11 @@ type External = {
   description: string;
 };
 
+type Video = {
+  playlist: string;
+  thumbnail: string;
+};
+
 type TweetProps = {
   author: { avatar: string; displayName: string; handle: string };
   text: string;
@@ -22,6 +27,7 @@ type TweetProps = {
   images?: string[];
   children?: React.ReactNode;
   external?: External | null | undefined;
+  video?: Video | null | undefined;
 };
 
 function Tweet(props: TweetProps) {
@@ -66,6 +72,20 @@ function Tweet(props: TweetProps) {
           ))}
         </div>
       )}
+      <div>
+        <video
+          id="tweet-video"
+          className="video-js vjs-default-skin w-full aspect-video rounded-md"
+          controls
+          preload="auto"
+          poster="https://video.bsky.app/watch/did%3Aplc%3A4llrhdclvdlmmynkwsmg5tdc/bafkreigt2o53a6qpcgzqowhkpc2cad5x2eop7piuydxtqxisl4todk5qee/thumbnail.jpg"
+          data-setup='{}'
+        >
+          <source src="https://video.bsky.app/watch/did%3Aplc%3A4llrhdclvdlmmynkwsmg5tdc/bafkreigt2o53a6qpcgzqowhkpc2cad5x2eop7piuydxtqxisl4todk5qee/playlist.m3u8" type="application/x-mpegURL" />
+          <track src="https://cdn.bsky.app/blob/bafkreibhwnll2hiciwijuvylj4top6u7smynqs2tvzun4dfwcq7u25ijcq" kind="captions" srcLang="en" label="English" default />
+          Your browser does not support the video tag.
+        </video>
+      </div>
       {children && <div>{children}</div>}
     </div>
   );
@@ -89,6 +109,9 @@ export default function Post(props: Props) {
   let external: External | undefined | null = undefined;
   if (post.embed?.$type === 'app.bsky.embed.external#view') {
     external = post.embed.external;
+  }
+
+  if (post.embed?.$type === 'app.bsky.embed.video#view') {
   }
 
   // app.bsky.embed.record#view
