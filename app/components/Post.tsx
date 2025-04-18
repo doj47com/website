@@ -25,20 +25,23 @@ type TweetProps = {
 };
 
 function Tweet(props: TweetProps) {
-  const { author, text, createdAt, images, children, external } = props;
+  const { author, rkey, text, createdAt, images, children, external } = props;
   console.log(props);
   console.log(external);
+
+  const profileUrl = `https://bsky.app/profile/${author.handle}`;
+  const postUrl = `https://bsky.app/profile/${author.handle}/post/${rkey}`;
   return (
     <div className="border border-gray-300 rounded-xl p-4 mb-2 text-sm bg-white shadow-sm">
       <div className="flex gap-3 items-center mb-2">
-        <img
+        <a href={profileUrl}><img
           src={author.avatar}
           alt={author.displayName}
           className="w-10 h-10 rounded-full"
-        />
+        /></a>
         <div>
-          <div className="font-semibold">{author.displayName}</div>
-          <div className="text-gray-500">@{author.handle}</div>
+          <div className="text-black font-semibold"><a href={profileUrl} className='text-black hover:text-black'>{author.displayName}</a></div>
+          <div className="text-gray-500"><a href={profileUrl} className='text-gray-500 hover:text-gray-500'>@{author.handle}</a> · <a href={postUrl} className='text-gray-500 hover:text-gray-500'>{formatDate(createdAt)}</a></div>
         </div>
       </div>
       <div className="whitespace-pre-wrap mb-3">{text}</div>
@@ -64,7 +67,6 @@ function Tweet(props: TweetProps) {
         </div>
       )}
       {children && <div>{children}</div>}
-      <div className="text-xs text-gray-400 mt-3">{formatDate(createdAt)}</div>
     </div>
   );
 }
@@ -73,11 +75,12 @@ type Props = { post: any; };
 
 export default function Post(props: Props) {
   const { post } = props;
-  console.log(post);
+  //console.log(post);
 
   let subtweet = null;
+  const rkey = post.uri.replace(/.*[/]/, '');
   //console.log(post.embed.record.embeds);
-  console.log(post.embed);
+  //console.log(post.embed);
 
   let external: External | undefined | null = undefined;
   if (post.embed?.$type === 'app.bsky.embed.external#view') {
@@ -87,7 +90,10 @@ export default function Post(props: Props) {
   // app.bsky.embed.record#view
   if (post.embed?.$type === 'app.bsky.embed.record#view') {
     console.log(post.embed);
+
+    const rkey = post.embed.record.uri.replace(/.*[/]/, '');
     subtweet = <Tweet
+      rkey={rkey}
       author={{
         avatar: post.embed.record.author.avatar,
         displayName: post.embed.record.author.displayName,
@@ -106,6 +112,7 @@ export default function Post(props: Props) {
 
   return (
     <Tweet
+      rkey={rkey}
       author={{
         avatar: post.author.avatar,
         displayName: post.author.displayName,
