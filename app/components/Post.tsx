@@ -95,13 +95,17 @@ export default function Post(props: Props) {
   if (post.embed?.$type === 'app.bsky.embed.record#view') {
     console.log('embed', post.embed);
 
-    const embeddedEmbeds = post.embed.record?.embeds;
+    const embeddedEmbeds = post.embed.record?.embeds || [];
     // http://localhost:5173/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Adlmur6emtjntr5n5qysgrdos%2Fpost%2F3lmk5kri4xk2s
     // https://gist.github.com/cldellow/ef42cfca25f21a90ec1383e35ec85c18#file-qt-text-on-url-json-L28
     let subtweetExternal: External | undefined;
     if (embeddedEmbeds?.[0]?.$type === 'app.bsky.embed.external#view') {
       subtweetExternal = embeddedEmbeds[0].external as External;
     }
+    let images: string[] = [];
+    const embeddedImages = embeddedEmbeds.find(x => x.$type === 'app.bsky.embed.images#view');
+    if (embeddedImages)
+      images = extractImages(embeddedImages.images);
 
     const rkey = post.embed.record.uri.replace(/.*[/]/, '');
     subtweet = <Tweet
@@ -114,6 +118,7 @@ export default function Post(props: Props) {
       createdAt={post.embed.record.value.createdAt}
       text={post.embed.record.value.text}
       external={subtweetExternal}
+      images={images}
     />
   }
 
