@@ -1,4 +1,5 @@
 import React from "react";
+import Video from './Video';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, {
@@ -31,7 +32,7 @@ type TweetProps = {
 };
 
 function Tweet(props: TweetProps) {
-  const { author, rkey, text, createdAt, images, children, external } = props;
+  const { author, rkey, text, createdAt, images, children, external, video } = props;
   console.log(props);
   console.log(external);
 
@@ -72,20 +73,7 @@ function Tweet(props: TweetProps) {
           ))}
         </div>
       )}
-      <div>
-        <video
-          id="tweet-video"
-          className="video-js vjs-default-skin w-full aspect-video rounded-md"
-          controls
-          preload="auto"
-          poster="https://video.bsky.app/watch/did%3Aplc%3A4llrhdclvdlmmynkwsmg5tdc/bafkreigt2o53a6qpcgzqowhkpc2cad5x2eop7piuydxtqxisl4todk5qee/thumbnail.jpg"
-          data-setup='{}'
-        >
-          <source src="https://video.bsky.app/watch/did%3Aplc%3A4llrhdclvdlmmynkwsmg5tdc/bafkreigt2o53a6qpcgzqowhkpc2cad5x2eop7piuydxtqxisl4todk5qee/playlist.m3u8" type="application/x-mpegURL" />
-          <track src="https://cdn.bsky.app/blob/bafkreibhwnll2hiciwijuvylj4top6u7smynqs2tvzun4dfwcq7u25ijcq" kind="captions" srcLang="en" label="English" default />
-          Your browser does not support the video tag.
-        </video>
-      </div>
+      {video && <Video {...video}/>}
       {children && <div>{children}</div>}
     </div>
   );
@@ -111,7 +99,10 @@ export default function Post(props: Props) {
     external = post.embed.external;
   }
 
+  let video: Video | undefined;
   if (post.embed?.$type === 'app.bsky.embed.video#view') {
+    console.log(`itsa video`, post.embed);
+    video = post.embed as Video;
   }
 
   // app.bsky.embed.record#view
@@ -171,6 +162,7 @@ export default function Post(props: Props) {
       createdAt={quotedRecord.value.createdAt}
       text={quotedRecord.value.text}
       external={external}
+      video={video}
     />
   }
 
@@ -186,6 +178,7 @@ export default function Post(props: Props) {
       text={post.record.text}
       images={images}
       external={external}
+      video={video}
     >
       {subtweet}
     </Tweet>
