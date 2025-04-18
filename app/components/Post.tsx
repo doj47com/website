@@ -25,6 +25,7 @@ type TweetProps = {
   author: { avatar: string; displayName: string; handle: string };
   text: string;
   createdAt: string;
+  isNested?: boolean;
   images?: string[];
   children?: React.ReactNode;
   external?: External | null | undefined;
@@ -32,13 +33,21 @@ type TweetProps = {
 };
 
 function Tweet(props: TweetProps) {
-  const { author, rkey, text, createdAt, images, children, external, video } = props;
+  const { author, rkey, text, createdAt, images, isNested, children, external, video } = props;
   console.log(props);
   console.log(external);
 
   const profileUrl = `https://bsky.app/profile/${author.handle}`;
   const postUrl = `https://bsky.app/profile/${author.handle}/post/${rkey}`;
-  return (
+
+  function maybeWrap(node: React.ReactNode): JSX.Element {
+    if (isNested)
+      return node;
+
+    return <div className='max-w-2xl'>{node}</div>
+  }
+
+  return maybeWrap(
     <div className="border border-gray-300 rounded-xl p-4 mb-2 text-sm bg-white shadow-sm">
       <div className="flex gap-3 items-center mb-2">
         <a href={profileUrl}><img
@@ -132,6 +141,7 @@ export default function Post(props: Props) {
       createdAt={post.embed.record.value.createdAt}
       text={post.embed.record.value.text}
       external={subtweetExternal}
+      isNested={true}
       images={images}
     />
   }
@@ -160,6 +170,7 @@ export default function Post(props: Props) {
         handle: quotedRecord.author.handle,
       }}
       createdAt={quotedRecord.value.createdAt}
+      isNested={true}
       text={quotedRecord.value.text}
       external={external}
       video={video}
