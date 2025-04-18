@@ -73,6 +73,10 @@ function Tweet(props: TweetProps) {
 
 type Props = { post: any; };
 
+function extractImages(imagesArray: any[]): string[] {
+  return imagesArray.map(img => img.thumb);
+}
+
 export default function Post(props: Props) {
   const { post } = props;
   //console.log(post);
@@ -89,7 +93,7 @@ export default function Post(props: Props) {
 
   // app.bsky.embed.record#view
   if (post.embed?.$type === 'app.bsky.embed.record#view') {
-    console.log(post.embed);
+    console.log('embed', post.embed);
 
     const rkey = post.embed.record.uri.replace(/.*[/]/, '');
     subtweet = <Tweet
@@ -107,7 +111,31 @@ export default function Post(props: Props) {
 
   let images: string[] = [];
   if (post.embed?.$type === 'app.bsky.embed.images#view') {
-    images = post.embed.images.map(img => img.thumb);
+    images = extractImages(post.embed.images);
+  }
+
+  if (post.embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
+    // https://bsky.app/profile/did:plc:yokssolxkvz4lobktvx6yvxb/post/3lmki6jowhs2u
+    // https://gist.github.com/cldellow/ff0da4b0cfe8bb592b47e21112d2d555
+    if (post.embed.media?.$type === 'app.bsky.embed.images#view') {
+      images = extractImages(post.embed.media.images);
+    }
+
+    const quotedRecord = post.embed.record.record;
+    console.log('quotedRecord', quotedRecord);
+
+    const rkey = quotedRecord.uri.replace(/.*[/]/, '');
+    subtweet = <Tweet
+      rkey={rkey}
+      author={{
+        avatar: quotedRecord.author.avatar,
+        displayName: quotedRecord.author.displayName,
+        handle: quotedRecord.author.handle,
+      }}
+      createdAt={quotedRecord.value.createdAt}
+      text={quotedRecord.value.text}
+      external={external}
+    />
   }
 
   return (
