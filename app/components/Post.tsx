@@ -9,6 +9,10 @@ function formatDate(iso: string) {
   });
 }
 
+function shorten(n) {
+  return n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : n;
+}
+
 type External = {
   uri: string;
   thumb: string;
@@ -30,10 +34,14 @@ type TweetProps = {
   children?: React.ReactNode;
   external?: External | null | undefined;
   video?: Video | null | undefined;
+  likeCount?: number;
+  postCount?: number;
+  replyCount?: number;
+  quoteCount?: number;
 };
 
 function Tweet(props: TweetProps) {
-  const { author, rkey, text, createdAt, images, isNested, children, external, video } = props;
+  const { author, rkey, text, createdAt, images, isNested, children, external, video, likeCount, repostCount, quoteCount } = props;
   console.log(props);
   console.log(external);
 
@@ -84,6 +92,14 @@ function Tweet(props: TweetProps) {
       )}
       {video && <Video {...video}/>}
       {children && <div>{children}</div>}
+      {!!(!isNested && (repostCount || quoteCount || likeCount)) && (
+        <div class="flex gap-4 text-xs text-gray-500 pt-3">
+          {!!repostCount && <span><span class="font-semibold text-gray-800">{shorten(repostCount)}</span> repost{repostCount > 1 ? 's' : ''}</span>}
+          {!!quoteCount && <span><span class="font-semibold text-gray-800">{shorten(quoteCount)}</span> quote{quoteCount > 1 ? 's' : ''}</span>}
+          {!!likeCount && <span><span class="font-semibold text-gray-800">{shorten(likeCount)}</span> like{likeCount > 1 ? 's' : ''}</span>}
+        </div>
+      )}
+
     </div>
   );
 }
@@ -190,6 +206,10 @@ export default function Post(props: Props) {
       images={images}
       external={external}
       video={video}
+      likeCount={post.likeCount}
+      quoteCount={post.quoteCount}
+      replyCount={post.replyCount}
+      repostCount={post.repostCount}
     >
       {subtweet}
     </Tweet>
