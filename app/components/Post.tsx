@@ -1,5 +1,6 @@
 import React from "react";
 import Video from './Video';
+import Lightbox from './Lightbox';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, {
@@ -30,7 +31,7 @@ type TweetProps = {
   text: string;
   createdAt: string;
   isNested?: boolean;
-  images?: string[];
+  images?: Image[];
   children?: React.ReactNode;
   external?: External | null | undefined;
   video?: Video | null | undefined;
@@ -80,12 +81,22 @@ function Tweet(props: TweetProps) {
       )}
       {images && images.length > 0 && (
         <div className="grid grid-cols-2 gap-2 mb-3">
+          {/*
           {images.map((src, idx) => (
             <img
               key={idx}
               src={src}
               alt=""
               className="rounded-lg border border-gray-200 w-full object-cover"
+            />
+          ))}
+            */}
+          {images.map((img, idx) => (
+            <Lightbox
+              key={img.fullsize}
+              alt={img.alt}
+              thumb={img.thumb}
+              fullsize={img.fullsize}
             />
           ))}
         </div>
@@ -106,8 +117,14 @@ function Tweet(props: TweetProps) {
 
 type Props = { post: any; };
 
-function extractImages(imagesArray: any[]): string[] {
-  return imagesArray.map(img => img.thumb);
+type Image = {
+  alt?: string;
+  fullsize: string;
+  thumb: string;
+};
+
+function extractImages(imagesArray: any[]): Image[] {
+  return imagesArray;
 }
 
 export default function Post(props: Props) {
@@ -141,7 +158,7 @@ export default function Post(props: Props) {
     if (embeddedEmbeds?.[0]?.$type === 'app.bsky.embed.external#view') {
       subtweetExternal = embeddedEmbeds[0].external as External;
     }
-    let images: string[] = [];
+    let images: Image[] = [];
     const embeddedImages = embeddedEmbeds.find(x => x.$type === 'app.bsky.embed.images#view');
     if (embeddedImages)
       images = extractImages(embeddedImages.images);
@@ -162,7 +179,7 @@ export default function Post(props: Props) {
     />
   }
 
-  let images: string[] = [];
+  let images: Image[] = [];
   if (post.embed?.$type === 'app.bsky.embed.images#view') {
     images = extractImages(post.embed.images);
   }
