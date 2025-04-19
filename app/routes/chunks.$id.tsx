@@ -20,7 +20,8 @@ export default function ChunkPage() {
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Edit Chunk #{chunk.id}</h1>
+      <h1 className="text-2xl font-bold pb-0 mb-0">Edit Chunk #{chunk.id}</h1>
+      <div className='italic'>from <a href={`/${chunk.slug}`}>/{chunk.slug}</a></div>
 
       <FieldEditor field="ts" value={chunk.ts} id={chunk.id} label="Timestamp" />
       <FieldEditor field="title" value={chunk.title} id={chunk.id} label="Title" />
@@ -74,6 +75,7 @@ function FieldEditor({
       {isTextArea ? (
         <textarea
           className="w-full border rounded-md p-2"
+          rows="10"
           defaultValue={value}
           onBlur={handleBlur}
           onChange={(e) => setInputValue(e.target.value)}
