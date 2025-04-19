@@ -1,4 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
+import { requireAuth } from '../utils/auth.server';
 import { json } from "@remix-run/node";
 import Database from "better-sqlite3";
 import path from "path";
@@ -49,6 +50,7 @@ function search(query: string, ...params: unknown[]) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  requireAuth(request);
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim();
 

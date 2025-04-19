@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from "react-router-dom";
-import type { MetaFunction } from "@remix-run/node";
+import { requireAuth } from '../utils/auth.server';
+import { LoaderFunction, MetaFunction, json } from "@remix-run/node";
 import Frame from '../components/Frame';
 import CopyButton from '../components/CopyButton';
 import SearchBox from '../components/SearchBox';
@@ -11,6 +12,11 @@ export const meta: MetaFunction = () => {
     { title: "doj47 - Search posts" },
     { name: "description", content: "Search posts from legal twitter." },
   ];
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  requireAuth(request);
+  return json({});
 };
 
 
