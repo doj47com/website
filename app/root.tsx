@@ -5,7 +5,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import type { LoaderFunction, LinksFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 
 import "./tailwind.css";
 
@@ -21,6 +22,19 @@ export const links: LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const cookieHeader = request.headers.get("cookie") || "";
+  const cookies = Object.fromEntries(
+    cookieHeader
+      .split(";")
+      .map(c => c.trim().split("=").map(decodeURIComponent))
+  );
+
+  const loggedIn = cookies["doj47"] === process.env.DOJ47_SECRET;
+
+  return json({ loggedIn });
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLoggedIn } from '~/hooks/LoggedIn';
 
 export default function Frame({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
