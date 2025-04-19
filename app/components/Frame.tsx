@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLoggedIn } from '~/hooks/LoggedIn';
 import { useLocation } from '@remix-run/react';
 import LoggedIn from '~/components/LoggedIn';
+import Chunks from '~/components/Chunks';
 
 export default function Frame({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,6 +67,7 @@ export default function Frame({ children }) {
       {/* Page Content */}
       <main className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {children}
+        <Chunks/>
       </main>
     </div>
   );

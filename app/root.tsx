@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import type { LoaderFunction, LinksFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { getChunksBySlug } from '~/utils/db.server';
 
 import "./tailwind.css";
 
@@ -33,7 +34,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const loggedIn = cookies["doj47"] === process.env.DOJ47_SECRET;
 
-  return json({ loggedIn });
+  const url = new URL(request.url);
+  const slug = url.pathname.replace(/^[/]/, '');
+  const chunks = getChunksBySlug(slug);
+
+  return json({ loggedIn, chunks });
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {

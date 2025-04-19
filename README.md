@@ -22,7 +22,7 @@ CREATE TABLE chunks (
   FOREIGN KEY (slug) REFERENCES slugs(slug)
 );
 
-CREATE TABLE chunk_tweets (
+CREATE TABLE chunk_posts (
   chunk_id INTEGER NOT NULL,
   post_uri TEXT NOT NULL,
   is_live_tweet BOOLEAN NOT NULL DEFAULT 0,
