@@ -50,6 +50,7 @@ export default function ChunkPage() {
     </aside>
    <main className="flex-1 p-6">
     <h1 className="text-2xl font-bold mb-5">Edit Chunk #{chunk.id}</h1>
+     <a href={`/search-posts?chunk=${chunk.id}`}>add posts</a>
     <p>This is the main area of your Remix route.</p>
   </main>
 </div>

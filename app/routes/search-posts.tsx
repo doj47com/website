@@ -25,12 +25,17 @@ export default function Index() {
   const [value, setValue] = useState(searchParams.get('q') || '');
   const [results, setResults] = useState([]);
 
-  useEffect(() => {
-    if (value) {
-      setSearchParams({ q: value });
-    } else {
-      setSearchParams({});
+  function updateSearchParams(params) {
+    const newParams = new URLSearchParams(searchParams); // clone existing
+    for (const [k, v] of Object.entries(params)) {
+      newParams.set(k, v)
     }
+
+    setSearchParams(newParams);
+  }
+
+  useEffect(() => {
+    updateSearchParams({ q: value});
 
     if (value === '') {
       setResults([]);
