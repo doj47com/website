@@ -18,24 +18,41 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function ChunkPage() {
   const { chunk } = useLoaderData<typeof loader>();
 
+  const [showDelete, setShowDelete] = useState(false);
+
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold pb-0 mb-0">Edit Chunk #{chunk.id}</h1>
-      <div className='italic'>from <a href={`/${chunk.slug}`}>/{chunk.slug}</a></div>
+   <div className="flex min-h-screen">
+    {/* Left column */}
+    <aside className="w-1/3 bg-gray-100 p-4">
+      <div className="max-w-xl mx-auto p-6 space-y-6">
+        <div className='italic'>from <a href={`/${chunk.slug}`}>/{chunk.slug}</a></div>
 
-      <FieldEditor field="ts" value={chunk.ts} id={chunk.id} label="Timestamp" />
-      <FieldEditor field="title" value={chunk.title} id={chunk.id} label="Title" />
-      <FieldEditor field="body" value={chunk.body} id={chunk.id} label="Body" isTextArea />
+        <FieldEditor field="ts" value={chunk.ts} id={chunk.id} label="Timestamp" />
+        <FieldEditor field="title" value={chunk.title} id={chunk.id} label="Title" />
+        <FieldEditor field="body" value={chunk.body} id={chunk.id} label="Body" isTextArea />
 
-      <form method="POST" action={`/api/chunks/${chunk.id}/delete`} className="pt-4">
-        <button
-          type="submit"
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+        {!showDelete && <button
+          onClick={() => setShowDelete(true)}
+          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
         >
-          Delete chunk
-        </button>
-      </form>
-    </div>
+          Delete chunk?
+        </button>}
+        {showDelete && (
+        <form method="POST" action={`/api/chunks/${chunk.id}/delete`} className="">
+          <button
+            type="submit"
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+          >
+            Delete chunk
+          </button>
+        </form>)}
+      </div>
+    </aside>
+   <main className="flex-1 p-6">
+    <h1 className="text-2xl font-bold mb-5">Edit Chunk #{chunk.id}</h1>
+    <p>This is the main area of your Remix route.</p>
+  </main>
+</div>
   );
 }
 
