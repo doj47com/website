@@ -1,12 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { requireAuth } from '../utils/auth.server';
 import { json } from "@remix-run/node";
-import Database from "better-sqlite3";
-import path from "path";
-
-// Adjust if your DB is elsewhere
-const dbPath = path.resolve("doj47.sqlite");
-const db = new Database(dbPath, { readonly: true });
+import { db } from '~/utils/db.server';
 
 export async function resolveHandleToDID(handle: string): Promise<string | null> {
   const url = `https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(handle)}`;

@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useLoggedIn } from '~/hooks/LoggedIn';
+import { useLocation } from '@remix-run/react';
+import LoggedIn from '~/components/LoggedIn';
 
 export default function Frame({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const slug = location.pathname.slice(1);
 
   return (
     <div className="bg-gray-50 text-gray-900">
@@ -14,6 +18,11 @@ export default function Frame({ children }) {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex space-x-6 text-sm font-medium">
+              <LoggedIn>
+                <form method='post' action={`/api/chunks/create?slug=${slug}`}>
+                  <button type='submit' className="text-gray-700">Add Chunk</button>
+                </form>
+              </LoggedIn>
               <a href="/cases" className="text-gray-700">Cases</a>
               <a href="/firms" className="text-gray-700">Firms</a>
               <a href="/lawyers" className="text-gray-700">Lawyers</a>
