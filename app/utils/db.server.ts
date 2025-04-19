@@ -16,3 +16,24 @@ export function createChunk(slug: string): number {
   return result.id;
 }
 
+export function getChunk(id: number) {
+  const stmt = db.prepare(`SELECT * FROM chunks WHERE id = ?`);
+  const result = stmt.get(id);
+  return result;
+}
+
+export function setChunkField(id: number, field: string, value: string) {
+  const stmt = db.prepare(`UPDATE chunks SET ${field} = ? WHERE id = ?`);
+  stmt.run(value, id);
+}
+
+export function deleteChunk(id: number): string {
+  {
+    const stmt = db.prepare(`DELETE FROM chunk_tweets WHERE chunk_id = ?`);
+    stmt.run(id);
+  }
+
+  const stmt = db.prepare(`DELETE FROM chunks WHERE id = ? RETURNING slug`);
+  const result = stmt.get(id);
+  return result.slug;
+}

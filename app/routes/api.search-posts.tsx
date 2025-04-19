@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { requireAuth } from '../utils/auth.server';
+import { requireAuth } from '~/utils/auth.server';
 import { json } from "@remix-run/node";
 import { db } from '~/utils/db.server';
 
