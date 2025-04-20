@@ -25,6 +25,8 @@ export default function Index() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState(searchParams.get('q') || '');
   const [handle, setHandle] = useState(searchParams.get('handle') || '');
+  const [after, setAfter] = useState(searchParams.get('after') || '');
+  const [before, setBefore] = useState(searchParams.get('before') || '');
   const chunkId = searchParams.get('chunk') || '';
   const [results, setResults] = useState([]);
   const [ms, setMs] = useState(undefined);
@@ -40,7 +42,7 @@ export default function Index() {
 
   function doTheThing(controller?: AbortController) {
     const now = Date.now();
-    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}`, {
+    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}`, {
       ...(controller ? { signal: controller.signal } : {}),
     })
       .then((res) => res.json())
@@ -59,7 +61,12 @@ export default function Index() {
   useEffect(() => doTheThing, []);
 
   useEffect(() => {
-    updateSearchParams({ q: value, handle: handle});
+    updateSearchParams({
+      q: value,
+      handle,
+      after,
+      before,
+    });
 
     /*
     if (value === '') {
@@ -77,10 +84,14 @@ export default function Index() {
       clearTimeout(delayDebounce);
       controller.abort();
     };
-  }, [value, handle]);
+  }, [value, handle, before, after]);
   return <Frame>
     <SearchBox value={value} onChange={(value) => setValue(value)}/>
-    <SearchBox value={handle} onChange={(value) => setHandle(value)} placeholder='Handle'/>
+    <div className='max-w-md flex'>
+      <SearchBox value={handle} onChange={(value) => setHandle(value)} placeholder='Handle' width='inline'/>
+      <SearchBox value={after} onChange={(value) => setAfter(value)} placeholder='After' width='inline'/>
+      <SearchBox value={before} onChange={(value) => setBefore(value)} placeholder='Before' width='inline'/>
+    </div>
 
     <p>Results took {ms} ms:</p>
     {results.map(result => {

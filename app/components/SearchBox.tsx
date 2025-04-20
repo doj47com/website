@@ -2,11 +2,12 @@ type Props = {
   value: string;
   onChange: (x: string) => void;
   placeholder?: string;
+  width?: string;
 };
 
 export default function SearchBox(props: Props) {
   return (
-    <div className="max-w-md mb-2">
+    <div className={`mb-2 ${props.width || 'max-w-md'}`}>
       <div className="relative">
         <input
           type="text"

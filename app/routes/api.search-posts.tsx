@@ -49,6 +49,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim();
   const handle = url.searchParams.get("handle")?.trim();
+  const after = url.searchParams.get("after")?.trim();
+  const before = url.searchParams.get("before")?.trim();
 
   /*
   if (!q) {
@@ -85,6 +87,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (handle) {
     whereClauses.push(`handle = ?`);
     whereParams.push(handle);
+  }
+
+  if (after) {
+    whereClauses.push('created_at >= ?');
+    whereParams.push(after);
+  }
+
+  if (before) {
+    whereClauses.push('created_at < ?');
+    whereParams.push(before);
   }
 
 
