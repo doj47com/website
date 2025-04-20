@@ -87,6 +87,17 @@ export default function Index() {
       controller.abort();
     };
   }, [value, handle, before, after, offset]);
+
+  function PaginationControls() {
+    return (
+      <div>
+        {offset > 0 && <a className='cursor-pointer' onClick={() => setOffset(offset - 100)}>« Prev</a>}
+        <> </>
+        {results.length === 100 && <a className='cursor-pointer' onClick={() => setOffset(offset + 100)}>Next »</a>}
+      </div>
+    )
+  }
+
   return <Frame>
     <SearchBox value={value} onChange={(value) => setValue(value)}/>
     <div className='max-w-md flex'>
@@ -96,11 +107,7 @@ export default function Index() {
     </div>
 
     <p>Results took {ms} ms.
-      <div>
-        {offset > 0 && <a className='cursor-pointer' onClick={() => setOffset(offset - 100)}>« Prev</a>}
-        <> </>
-        <a className='cursor-pointer' onClick={() => setOffset(offset + 100)}>Next »</a>
-      </div>
+      <PaginationControls/>
     </p>
     {results.map((result, idx) => {
       const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
@@ -120,6 +127,7 @@ export default function Index() {
         </div>
       </React.Fragment>
     })}
+    <PaginationControls/>
 
     <hr/>
     <p>You can search for a term, or copy/paste a Bluesky URL. Examples:</p>
