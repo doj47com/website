@@ -23,6 +23,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [sort, setSort] = useState(searchParams.get('sort') || 'DESC');
   const [value, setValue] = useState(searchParams.get('q') || '');
   const [handle, setHandle] = useState(searchParams.get('handle') || '');
   const [after, setAfter] = useState(searchParams.get('after') || '');
@@ -43,7 +44,7 @@ export default function Index() {
 
   function doTheThing(controller?: AbortController) {
     const now = Date.now();
-    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}&offset=${offset}`, {
+    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}&offset=${offset}&sort=${sort}`, {
       ...(controller ? { signal: controller.signal } : {}),
     })
       .then((res) => res.json())
@@ -68,6 +69,7 @@ export default function Index() {
       after,
       before,
       offset,
+      sort,
     });
 
     /*
@@ -86,7 +88,7 @@ export default function Index() {
       clearTimeout(delayDebounce);
       controller.abort();
     };
-  }, [value, handle, before, after, offset]);
+  }, [value, handle, before, after, offset, sort]);
 
   function PaginationControls() {
     return (
@@ -135,7 +137,7 @@ export default function Index() {
       <SearchBox value={before} onChange={(value) => setBefore(value)} placeholder='Before' width='inline'/>
     </div>
 
-    <p>Results took {ms} ms.
+    <p>Results took {ms} ms, sorting <a onClick={() => setSort(sort === 'ASC' ? 'DESC' : 'ASC')} className='cursor-pointer'>{sort === 'ASC' ? 'oldest first' : 'newest first'}</a>.
       <PaginationControls/>
       <DayControls/>
     </p>

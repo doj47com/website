@@ -52,6 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const after = url.searchParams.get("after")?.trim();
   const before = url.searchParams.get("before")?.trim();
   const offset = url.searchParams.get("offset")?.trim() || '0';
+  const sort = url.searchParams.get("sort")?.trim() || 'DESC';
 
   /*
   if (!q) {
@@ -103,7 +104,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const where = whereClauses.length === 0 ? '' : `WHERE ${whereClauses.join(' AND ')}`;
   return search(
-    `SELECT json FROM posts ${where} ORDER BY created_at DESC LIMIT 100 OFFSET ${offset}`,
+    `SELECT json FROM posts ${where} ORDER BY created_at ${sort} LIMIT 100 OFFSET ${offset}`,
     ...whereParams
   );
 }
