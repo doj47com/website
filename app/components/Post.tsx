@@ -170,34 +170,39 @@ export default function Post(props: Props) {
 
   // app.bsky.embed.record#view
   if (post.embed?.$type === 'app.bsky.embed.record#view') {
+    if (post.embed.record.author === undefined) {
+      // This probably means the person being QTed has blocked the QTer,
+      // eg https://bsky.app/profile/did:plc:36eqtmzysqf7wsslczw4uxcd/post/3lg7xgd7qi22k
+      console.error(`!!!!!`, post);
+    } else {
+      const embeddedEmbeds = post.embed.record?.embeds || [];
+      // http://localhost:5173/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Adlmur6emtjntr5n5qysgrdos%2Fpost%2F3lmk5kri4xk2s
+      // https://gist.github.com/cldellow/ef42cfca25f21a90ec1383e35ec85c18#file-qt-text-on-url-json-L28
+      let subtweetExternal: External | undefined;
+      if (embeddedEmbeds?.[0]?.$type === 'app.bsky.embed.external#view') {
+        subtweetExternal = embeddedEmbeds[0].external as External;
+      }
+      let images: Image[] = [];
+      const embeddedImages = embeddedEmbeds.find(x => x.$type === 'app.bsky.embed.images#view');
+      if (embeddedImages)
+        images = extractImages(embeddedImages.images);
 
-    const embeddedEmbeds = post.embed.record?.embeds || [];
-    // http://localhost:5173/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Adlmur6emtjntr5n5qysgrdos%2Fpost%2F3lmk5kri4xk2s
-    // https://gist.github.com/cldellow/ef42cfca25f21a90ec1383e35ec85c18#file-qt-text-on-url-json-L28
-    let subtweetExternal: External | undefined;
-    if (embeddedEmbeds?.[0]?.$type === 'app.bsky.embed.external#view') {
-      subtweetExternal = embeddedEmbeds[0].external as External;
+      const rkey = post.embed.record.uri.replace(/.*[/]/, '');
+      subtweet = <Tweet
+        rkey={rkey}
+        author={{
+          avatar: post.embed.record.author.avatar,
+          displayName: post.embed.record.author.displayName,
+          handle: post.embed.record.author.handle,
+        }}
+        createdAt={post.embed.record.value.createdAt}
+        text={post.embed.record.value.text}
+        external={subtweetExternal}
+        isNested={true}
+        images={images}
+        stats={false}
+      />
     }
-    let images: Image[] = [];
-    const embeddedImages = embeddedEmbeds.find(x => x.$type === 'app.bsky.embed.images#view');
-    if (embeddedImages)
-      images = extractImages(embeddedImages.images);
-
-    const rkey = post.embed.record.uri.replace(/.*[/]/, '');
-    subtweet = <Tweet
-      rkey={rkey}
-      author={{
-        avatar: post.embed.record.author.avatar,
-        displayName: post.embed.record.author.displayName,
-        handle: post.embed.record.author.handle,
-      }}
-      createdAt={post.embed.record.value.createdAt}
-      text={post.embed.record.value.text}
-      external={subtweetExternal}
-      isNested={true}
-      images={images}
-      stats={false}
-    />
   }
 
   let images: Image[] = [];
