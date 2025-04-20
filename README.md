@@ -27,6 +27,9 @@ CREATE TABLE chunk_posts (
   FOREIGN KEY (chunk_id) REFERENCES chunks(id),
   FOREIGN KEY (post_uri) REFERENCES posts(uri)
 );
+
+CREATE INDEX idx_posts_created_at on posts(created_at);
+CREATE INDEX idx_posts_handle_created_at on posts(handle, created_at);
 ```
 
 ## Development
