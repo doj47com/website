@@ -49,9 +49,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim();
 
+  /*
   if (!q) {
     return json({ results: [] });
   }
+   */
 
   const bskyUrlRe = /^https:[/][/]bsky[.]app[/]profile[/]([^/]+)[/]post[/]([0-9a-z]+)$/;
   const m = bskyUrlRe.exec(q);
@@ -70,6 +72,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return search(`SELECT json FROM posts WHERE uri = ?`, uri);
   }
 
+  const whereClauses = [];
+  const whereParams = [];
+
   const likePattern = `%${q.replace(/[%_]/g, "\\$&")}%`; // escape % and _
-  return search(`SELECT json FROM posts WHERE json LIKE ? LIMIT 10`, likePattern);
+  whereClauses.push(`JSON LIKE ?`);
+  whereParams.push(likePattern);
+
+  const where = whereClauses.length === 0 ? '' : `WHERE ${whereClauses.join(' AND ')}`;
+  return search(
+    `SELECT json FROM posts ${where} ORDER BY created_at DESC LIMIT 100`,
+    ...whereParams
+  );
 }

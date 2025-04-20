@@ -39,10 +39,12 @@ export default function Index() {
   useEffect(() => {
     updateSearchParams({ q: value});
 
+    /*
     if (value === '') {
       setResults([]);
       return;
     }
+     */
 
     const controller = new AbortController(); // to cancel if new request comes in quickly
     const delayDebounce = setTimeout(() => {
