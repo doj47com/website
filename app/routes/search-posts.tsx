@@ -102,7 +102,7 @@ export default function Index() {
         <a className='cursor-pointer' onClick={() => setOffset(offset + 100)}>Next »</a>
       </div>
     </p>
-    {results.map(result => {
+    {results.map((result, idx) => {
       const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
       return <React.Fragment key={result.uri}>
         {/*<div className='mb-4'>*/}
@@ -113,6 +113,7 @@ export default function Index() {
             <Post post={result}/>
           </div>
           <div class="flex flex-col items-start space-y-2 pl-4">
+              <p className='text-2xl'>{Number(offset) + idx + 1}</p>
               <CopyButton text={JSON.stringify(result)}/>
               {!!chunkId && <AddPostToChunkButton chunkId={chunkId} postUri={result.uri}/>}
           </div>
