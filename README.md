@@ -8,10 +8,6 @@ The schema for the website-specific parts of the scrape database:
 
 ```sql
 CREATE TABLE slugs(slug TEXT PRIMARY KEY);
-INSERT INTO slugs(slug) VALUES ('unknown');
-INSERT INTO slugs(slug) VALUES ('cases/abrego-garcia');
-INSERT INTO slugs(slug) VALUES ('cases/adams');
-INSERT INTO slugs(slug) VALUES ('cases/jgg-v-trump');
 
 CREATE TABLE chunks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
