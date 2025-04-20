@@ -77,6 +77,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return search(`SELECT json FROM posts WHERE uri = ?`, uri);
   }
 
+  const atUrlRe = /^at:[/][/].*[/]app[.]bsky[.]feed[.]post[/]/;
+  if (atUrlRe.test(q)) {
+    return search(`SELECT json FROM posts WHERE uri = ?`, q);
+  }
+
   const whereClauses = [];
   const whereParams = [];
 
