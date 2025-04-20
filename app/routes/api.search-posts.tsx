@@ -48,6 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   requireAuth(request);
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim();
+  const handle = url.searchParams.get("handle")?.trim();
 
   /*
   if (!q) {
@@ -75,9 +76,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const whereClauses = [];
   const whereParams = [];
 
-  const likePattern = `%${q.replace(/[%_]/g, "\\$&")}%`; // escape % and _
-  whereClauses.push(`JSON LIKE ?`);
-  whereParams.push(likePattern);
+  if (q) {
+    const likePattern = `%${q.replace(/[%_]/g, "\\$&")}%`; // escape % and _
+    whereClauses.push(`JSON LIKE ?`);
+    whereParams.push(likePattern);
+  }
+
+  if (handle) {
+    whereClauses.push(`handle = ?`);
+    whereParams.push(handle);
+  }
+
 
   const where = whereClauses.length === 0 ? '' : `WHERE ${whereClauses.join(' AND ')}`;
   const offset = 0;

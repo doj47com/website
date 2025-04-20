@@ -24,6 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState(searchParams.get('q') || '');
+  const [handle, setHandle] = useState(searchParams.get('handle') || '');
   const chunkId = searchParams.get('chunk') || '';
   const [results, setResults] = useState([]);
   const [ms, setMs] = useState(undefined);
@@ -39,7 +40,7 @@ export default function Index() {
 
   function doTheThing(controller?: AbortController) {
     const now = Date.now();
-    fetch(`/api/search-posts?q=${encodeURIComponent(value)}`, {
+    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}`, {
       ...(controller ? { signal: controller.signal } : {}),
     })
       .then((res) => res.json())
@@ -58,7 +59,7 @@ export default function Index() {
   useEffect(() => doTheThing, []);
 
   useEffect(() => {
-    updateSearchParams({ q: value});
+    updateSearchParams({ q: value, handle: handle});
 
     /*
     if (value === '') {
@@ -76,9 +77,10 @@ export default function Index() {
       clearTimeout(delayDebounce);
       controller.abort();
     };
-  }, [value]);
+  }, [value, handle]);
   return <Frame>
     <SearchBox value={value} onChange={(value) => setValue(value)}/>
+    <SearchBox value={handle} onChange={(value) => setHandle(value)} placeholder='Handle'/>
 
     <p>Results took {ms} ms:</p>
     {results.map(result => {
