@@ -3,11 +3,29 @@ import Video from './Video';
 import Lightbox from './Lightbox';
 
 function formatDate(iso: string) {
+  /*
   return new Date(iso).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
+   */
+  const date = new Date(iso);
+
+  const options = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "UTC", // optional: use your local TZ if you prefer
+  };
+
+  const formatter = new Intl.DateTimeFormat("en-GB", options);
+  const formatted = formatter.format(date).replace(',', '').replace(' at', '');
+  return formatted;
+
 }
 
 function shorten(n) {
