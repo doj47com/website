@@ -130,7 +130,7 @@ export default function Index() {
 
 
   return <Frame>
-    <SearchBox value={value} onChange={(value) => setValue(value)}/>
+    <SearchBox value={value} onChange={(value) => { setValue(value); setOffset(0); }}/>
     <div className='max-w-md flex'>
       <SearchBox value={handle} onChange={(value) => setHandle(value)} placeholder='Handle' width='inline'/>
       <SearchBox value={after} onChange={(value) => setAfter(value)} placeholder='After' width='inline'/>
