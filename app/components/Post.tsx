@@ -171,9 +171,11 @@ export default function Post(props: Props) {
   // app.bsky.embed.record#view
   if (post.embed?.$type === 'app.bsky.embed.record#view') {
     if (post.embed.record.author === undefined) {
-      // This probably means the person being QTed has blocked the QTer,
+      // This probably means the person being QTed has blocked/deleted the QTer,
       // eg https://bsky.app/profile/did:plc:36eqtmzysqf7wsslczw4uxcd/post/3lg7xgd7qi22k
-      console.error(`!!!!!`, post);
+      //console.error(`!!!!!`, post);
+    } else if (post.embed.record.value === undefined) {
+      // similar, eg https://bsky.app/profile/did:plc:36eqtmzysqf7wsslczw4uxcd/post/3lhkbmvqlus2y
     } else {
       const embeddedEmbeds = post.embed.record?.embeds || [];
       // http://localhost:5173/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Adlmur6emtjntr5n5qysgrdos%2Fpost%2F3lmk5kri4xk2s
