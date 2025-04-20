@@ -182,6 +182,12 @@ export default function Post(props: Props) {
       if (embeddedEmbeds?.[0]?.$type === 'app.bsky.embed.external#view') {
         subtweetExternal = embeddedEmbeds[0].external as External;
       }
+
+      // https://gist.github.com/cldellow/05090566c24e5e3138bc65675b85ddb6
+      let subtweetVideo: Video | undefined;
+      if (embeddedEmbeds?.[0]?.$type === 'app.bsky.embed.video#view') {
+        subtweetVideo = embeddedEmbeds[0] as Video;
+      }
       let images: Image[] = [];
       const embeddedImages = embeddedEmbeds.find(x => x.$type === 'app.bsky.embed.images#view');
       if (embeddedImages)
@@ -200,6 +206,7 @@ export default function Post(props: Props) {
         external={subtweetExternal}
         isNested={true}
         images={images}
+        video={subtweetVideo}
         stats={false}
       />
     }
