@@ -98,6 +98,35 @@ export default function Index() {
     )
   }
 
+  function addDays(iso: string, days: number) {
+    const d = new Date(iso);
+    d.setDate(d.getDate() + days);
+    return d.toISOString().substring(0, 10);
+  }
+
+  function DayControls() {
+    if (!before)
+      return;
+
+    if (!after)
+      return;
+
+    const prevMax = after;
+    const prevMin = addDays(after, -1);
+
+    const nextMin = before;
+    const nextMax = addDays(before, 1);
+
+    return (
+      <div>
+        <a className='cursor-pointer' onClick={() => { setBefore(prevMax); setAfter(prevMin); }}>« Prev Day</a>
+        <> </>
+        <a className='cursor-pointer' onClick={() => { setBefore(nextMax); setAfter(nextMin); } }>Next Day »</a>
+      </div>
+    )
+  }
+
+
   return <Frame>
     <SearchBox value={value} onChange={(value) => setValue(value)}/>
     <div className='max-w-md flex'>
@@ -108,6 +137,7 @@ export default function Index() {
 
     <p>Results took {ms} ms.
       <PaginationControls/>
+      <DayControls/>
     </p>
     {results.map((result, idx) => {
       const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
@@ -128,6 +158,7 @@ export default function Index() {
       </React.Fragment>
     })}
     <PaginationControls/>
+    <DayControls/>
 
     <hr/>
     <p>You can search for a term, or copy/paste a Bluesky URL. Examples:</p>
