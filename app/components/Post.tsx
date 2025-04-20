@@ -226,21 +226,25 @@ export default function Post(props: Props) {
 
     const quotedRecord = post.embed.record.record;
 
-    const rkey = quotedRecord.uri.replace(/.*[/]/, '');
-    subtweet = <Tweet
-      rkey={rkey}
-      author={{
-        avatar: quotedRecord.author.avatar,
-        displayName: quotedRecord.author.displayName,
-        handle: quotedRecord.author.handle,
-      }}
-      createdAt={quotedRecord.value.createdAt}
-      isNested={true}
-      text={quotedRecord.value.text}
-      external={external}
-      video={video}
-      stats={false}
-    />
+    if (quotedRecord.author === undefined) {
+      // The user has been blocked, eg https://bsky.app/profile/did:plc:36eqtmzysqf7wsslczw4uxcd/post/3lghrmr6zes2a
+    } else {
+      const rkey = quotedRecord.uri.replace(/.*[/]/, '');
+      subtweet = <Tweet
+        rkey={rkey}
+        author={{
+          avatar: quotedRecord.author.avatar,
+          displayName: quotedRecord.author.displayName,
+          handle: quotedRecord.author.handle,
+        }}
+        createdAt={quotedRecord.value.createdAt}
+        isNested={true}
+        text={quotedRecord.value.text}
+        external={external}
+        video={video}
+        stats={false}
+      />
+    }
   }
 
   return (
