@@ -4,7 +4,9 @@ import { useLocation } from '@remix-run/react';
 import LoggedIn from '~/components/LoggedIn';
 import Chunks from '~/components/Chunks';
 
-export default function Frame({ children }) {
+export default function Frame(props) {
+  const { children } = props;
+  const title = ((props.frontmatter || {}).meta || []).find(x => x.title)?.title || '';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const slug = location.pathname.slice(1);
@@ -66,6 +68,9 @@ export default function Frame({ children }) {
 
       {/* Page Content */}
       <main className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {!!title && <div class="text-4xl font-bold tracking-tight text-gray-900 mb-4">
+          {title}
+        </div>}
         {children}
         <Chunks/>
       </main>
