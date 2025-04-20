@@ -16,7 +16,6 @@ export default function Chunks(props: Props) {
         <h2>{chunk.title} <LoggedIn>(<a href={`/chunks/${chunk.id}`}>edit</a>)</LoggedIn></h2>
         {!!chunk.body.trim() && <MDXRenderer code={chunk.body}/>}
         {chunk.posts.map(post => {
-          console.log(post);
           //return <pre>{JSON.stringify(post)}</pre>;
           return <Post key={post.uri} post={post.post} stats={false}/>;
         })}

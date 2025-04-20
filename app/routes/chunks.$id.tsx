@@ -1,8 +1,10 @@
 import { json, LoaderFunction, useLoaderData } from "@remix-run/react";
 import { useFetcher } from "@remix-run/react";
 import { useState } from "react";
-import { getChunk } from "~/utils/db.server";
+import { getChunk, getChunkPosts } from "~/utils/db.server";
 import { requireAuth } from '~/utils/auth.server';
+import Post from '~/components/Post';
+import DeleteChunkPostButton from '~/components/DeleteChunkPostButton';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   requireAuth(request);
@@ -11,12 +13,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const chunk = getChunk(id);
   if (!chunk) throw new Response("Not Found", { status: 404 });
+  
+  const posts = getChunkPosts(id);
 
-  return json({ chunk });
+  return json({ chunk, posts });
 };
 
 export default function ChunkPage() {
-  const { chunk } = useLoaderData<typeof loader>();
+  const { chunk, posts } = useLoaderData<typeof loader>();
 
   const [showDelete, setShowDelete] = useState(false);
 
@@ -51,7 +55,13 @@ export default function ChunkPage() {
    <main className="flex-1 p-6">
     <h1 className="text-2xl font-bold mb-5">Edit Chunk #{chunk.id}</h1>
      <a href={`/search-posts?chunk=${chunk.id}`}>add posts</a>
-    <p>This is the main area of your Remix route.</p>
+     {posts.map(post => {
+       return <>
+         <hr className='my-4'/>
+         <Post key={post.postUri} post={post.post} stats={false}/>
+         <DeleteChunkPostButton chunkId={post.chunkId} postUri={post.postUri} />
+       </>
+     })}
   </main>
 </div>
   );

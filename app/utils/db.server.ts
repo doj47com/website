@@ -23,6 +23,21 @@ export function getChunk(id: number) {
   return result;
 }
 
+export function getChunkPosts(id: number): { chunkId: number; postUri: string; post: unknown; }[]  {
+  const stmt = db.prepare(`SELECT cp.chunk_id, cp.post_uri, p.json FROM chunk_posts cp JOIN posts p ON p.uri = cp.post_uri WHERE chunk_id = ? ORDER BY p.created_at DESC`);
+
+  const rv = [];
+  for (const row of stmt.all(id)) {
+    rv.push({
+      chunkId: row.chunk_id,
+      postUri: row.post_uri,
+      post: JSON.parse(row.json)
+    });
+  }
+  return rv;
+}
+
+
 export function getChunksBySlug(slug: string): Chunk[] {
   // Get each chunk, then also get each tweet.
   const rows = db.prepare(`
@@ -82,6 +97,11 @@ export function setChunkField(id: number, field: string, value: string) {
 
 export function addPostToChunk(id: number, postUri: string) {
   const stmt = db.prepare(`INSERT INTO chunk_posts(chunk_id, post_uri) VALUES (?, ?)`);
+  stmt.run(id, postUri);
+}
+
+export function deletePostFromChunk(id: number, postUri: string) {
+  const stmt = db.prepare(`DELETE FROM chunk_posts WHERE chunk_id = ? AND post_uri = ?`);
   stmt.run(id, postUri);
 }
 
