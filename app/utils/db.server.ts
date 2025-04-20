@@ -40,7 +40,7 @@ export function getChunksBySlug(slug: string): Chunk[] {
     LEFT JOIN chunk_posts cp ON cp.chunk_id = c.id
     LEFT JOIN posts p ON cp.post_uri = p.uri
     WHERE c.slug = ?
-    ORDER BY c.ts ASC, cp.rowid ASC
+    ORDER BY c.ts DESC, p.created_at DESC
   `).all(slug);
 
   const chunksById = new Map<number, Chunk>();
@@ -80,9 +80,14 @@ export function setChunkField(id: number, field: string, value: string) {
   stmt.run(value, id);
 }
 
+export function addPostToChunk(id: number, postUri: string) {
+  const stmt = db.prepare(`INSERT INTO chunk_posts(chunk_id, post_uri) VALUES (?, ?)`);
+  stmt.run(id, postUri);
+}
+
 export function deleteChunk(id: number): string {
   {
-    const stmt = db.prepare(`DELETE FROM chunk_tweets WHERE chunk_id = ?`);
+    const stmt = db.prepare(`DELETE FROM chunk_posts WHERE chunk_id = ?`);
     stmt.run(id);
   }
 

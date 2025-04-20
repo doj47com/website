@@ -4,6 +4,7 @@ import { requireAuth } from '../utils/auth.server';
 import { LoaderFunction, MetaFunction, json } from "@remix-run/node";
 import Frame from '../components/Frame';
 import CopyButton from '../components/CopyButton';
+import AddPostToChunkButton from '../components/AddPostToChunkButton';
 import SearchBox from '../components/SearchBox';
 import Post from '../components/Post';
 
@@ -23,6 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState(searchParams.get('q') || '');
+  const chunkId = searchParams.get('chunk') || '';
   const [results, setResults] = useState([]);
 
   function updateSearchParams(params) {
@@ -74,7 +76,11 @@ export default function Index() {
       return <React.Fragment key={result.uri}>
         <div className='mb-4'>
           <a target='_blank' href={uri}>Post by {result.author.displayName}</a> on {result.record.createdAt}
-          <br/><CopyButton text={JSON.stringify(result)}/>
+          <br/>
+          <div className="flex items-center space-x-2">
+            <CopyButton text={JSON.stringify(result)}/>
+            {!!chunkId && <AddPostToChunkButton chunkId={chunkId} postUri={result.uri}/>}
+          </div>
           <Post post={result}/>
         </div>
         <hr/>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useChunks } from '~/hooks/useChunks';
 import LoggedIn from '~/components/LoggedIn';
+import Post from '~/components/Post';
 import MDXRenderer from '~/components/MDXRenderer';
 
 export default function Chunks(props: Props) {
@@ -14,9 +15,11 @@ export default function Chunks(props: Props) {
       return <React.Fragment key={chunk.id}>
         <h2>{chunk.title} <LoggedIn>(<a href={`/chunks/${chunk.id}`}>edit</a>)</LoggedIn></h2>
         {!!chunk.body.trim() && <MDXRenderer code={chunk.body}/>}
-        <pre>
-          {JSON.stringify(chunk, null, 2)}
-        </pre>
+        {chunk.posts.map(post => {
+          console.log(post);
+          //return <pre>{JSON.stringify(post)}</pre>;
+          return <Post key={post.uri} post={post.post} stats={false}/>;
+        })}
       </React.Fragment>
     })}
   </>

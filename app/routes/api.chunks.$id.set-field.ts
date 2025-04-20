@@ -3,6 +3,7 @@ import { requireAuth } from '~/utils/auth.server';
 import { setChunkField } from "~/utils/db.server";
 
 export const action = async ({ params, request }) => {
+  requireAuth(request);
   const id = Number(params.id);
   const url = new URL(request.url);
   const field = url.searchParams.get("field");

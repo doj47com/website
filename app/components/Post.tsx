@@ -39,12 +39,13 @@ type TweetProps = {
   postCount?: number;
   replyCount?: number;
   quoteCount?: number;
+  stats?: boolean;
 };
 
 function Tweet(props: TweetProps) {
-  const { author, rkey, text, createdAt, images, isNested, children, external, video, likeCount, repostCount, quoteCount } = props;
-  console.log(props);
-  console.log(external);
+  const { author, rkey, text, createdAt, images, isNested, children, external, video, likeCount, repostCount, quoteCount, stats } = props;
+//  console.log(props);
+//  console.log(external);
 
   const profileUrl = `https://bsky.app/profile/${author.handle}`;
   const postUrl = `https://bsky.app/profile/${author.handle}/post/${rkey}`;
@@ -103,19 +104,17 @@ function Tweet(props: TweetProps) {
       )}
       {video && <Video {...video}/>}
       {children && <div>{children}</div>}
-      {!!(!isNested && (repostCount || quoteCount || likeCount)) && (
-        <div class="flex gap-4 text-xs text-gray-500 pt-3">
-          {!!repostCount && <span><span class="font-semibold text-gray-800">{shorten(repostCount)}</span> repost{repostCount > 1 ? 's' : ''}</span>}
-          {!!quoteCount && <span><span class="font-semibold text-gray-800">{shorten(quoteCount)}</span> quote{quoteCount > 1 ? 's' : ''}</span>}
-          {!!likeCount && <span><span class="font-semibold text-gray-800">{shorten(likeCount)}</span> like{likeCount > 1 ? 's' : ''}</span>}
+      {!!(stats && (repostCount || quoteCount || likeCount)) && (
+        <div className="flex gap-4 text-xs text-gray-500 pt-3">
+          {!!repostCount && <span><span className="font-semibold text-gray-800">{shorten(repostCount)}</span> repost{repostCount > 1 ? 's' : ''}</span>}
+          {!!quoteCount && <span><span className="font-semibold text-gray-800">{shorten(quoteCount)}</span> quote{quoteCount > 1 ? 's' : ''}</span>}
+          {!!likeCount && <span><span className="font-semibold text-gray-800">{shorten(likeCount)}</span> like{likeCount > 1 ? 's' : ''}</span>}
         </div>
       )}
 
     </div>
   );
 }
-
-type Props = { post: any; };
 
 type Image = {
   alt?: string;
@@ -126,6 +125,11 @@ type Image = {
 function extractImages(imagesArray: any[]): Image[] {
   return imagesArray;
 }
+
+type Props = {
+  post: any;
+  stats?: boolean;
+};
 
 export default function Post(props: Props) {
   const { post } = props;
@@ -143,13 +147,11 @@ export default function Post(props: Props) {
 
   let video: Video | undefined;
   if (post.embed?.$type === 'app.bsky.embed.video#view') {
-    console.log(`itsa video`, post.embed);
     video = post.embed as Video;
   }
 
   // app.bsky.embed.record#view
   if (post.embed?.$type === 'app.bsky.embed.record#view') {
-    console.log('embed', post.embed);
 
     const embeddedEmbeds = post.embed.record?.embeds || [];
     // http://localhost:5173/search-posts?q=https%3A%2F%2Fbsky.app%2Fprofile%2Fdid%3Aplc%3Adlmur6emtjntr5n5qysgrdos%2Fpost%2F3lmk5kri4xk2s
@@ -176,6 +178,7 @@ export default function Post(props: Props) {
       external={subtweetExternal}
       isNested={true}
       images={images}
+      stats={false}
     />
   }
 
@@ -192,7 +195,6 @@ export default function Post(props: Props) {
     }
 
     const quotedRecord = post.embed.record.record;
-    console.log('quotedRecord', quotedRecord);
 
     const rkey = quotedRecord.uri.replace(/.*[/]/, '');
     subtweet = <Tweet
@@ -207,6 +209,7 @@ export default function Post(props: Props) {
       text={quotedRecord.value.text}
       external={external}
       video={video}
+      stats={false}
     />
   }
 
@@ -227,6 +230,7 @@ export default function Post(props: Props) {
       quoteCount={post.quoteCount}
       replyCount={post.replyCount}
       repostCount={post.repostCount}
+      stats={props.stats}
     >
       {subtweet}
     </Tweet>
