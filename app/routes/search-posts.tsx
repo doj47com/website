@@ -26,6 +26,7 @@ export default function Index() {
   const [value, setValue] = useState(searchParams.get('q') || '');
   const chunkId = searchParams.get('chunk') || '';
   const [results, setResults] = useState([]);
+  const [ms, setMs] = useState(undefined);
 
   function updateSearchParams(params) {
     const newParams = new URLSearchParams(searchParams); // clone existing
@@ -35,6 +36,26 @@ export default function Index() {
 
     setSearchParams(newParams);
   }
+
+  function doTheThing(controller?: AbortController) {
+    const now = Date.now();
+    fetch(`/api/search-posts?q=${encodeURIComponent(value)}`, {
+      ...(controller ? { signal: controller.signal } : {}),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setMs(Date.now() - now);
+        setResults(data.results)
+      })
+      .catch((err) => {
+        setMs(Date.now() - now);
+        if (err.name !== "AbortError") {
+          console.error("Fetch error:", err);
+        }
+      });
+  }
+
+  useEffect(() => doTheThing, []);
 
   useEffect(() => {
     updateSearchParams({ q: value});
@@ -48,16 +69,7 @@ export default function Index() {
 
     const controller = new AbortController(); // to cancel if new request comes in quickly
     const delayDebounce = setTimeout(() => {
-      fetch(`/api/search-posts?q=${encodeURIComponent(value)}`, {
-        signal: controller.signal
-      })
-        .then((res) => res.json())
-        .then((data) => setResults(data.results))
-        .catch((err) => {
-          if (err.name !== "AbortError") {
-            console.error("Fetch error:", err);
-          }
-        });
+      doTheThing(controller);
     }, 300); // debounce delay
 
     return () => {
@@ -68,24 +80,22 @@ export default function Index() {
   return <Frame>
     <SearchBox value={value} onChange={(value) => setValue(value)}/>
 
-    <p>
-      Value is: {value}
-    </p>
-
-    <p>Results are:</p>
+    <p>Results took {ms} ms:</p>
     {results.map(result => {
       const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
       return <React.Fragment key={result.uri}>
-        <div className='mb-4'>
-          <a target='_blank' href={uri}>Post by {result.author.displayName}</a> on {result.record.createdAt}
-          <br/>
-          <div className="flex items-center space-x-2">
-            <CopyButton text={JSON.stringify(result)}/>
-            {!!chunkId && <AddPostToChunkButton chunkId={chunkId} postUri={result.uri}/>}
+        {/*<div className='mb-4'>*/}
+        <div class="flex items-start mb-4">
+          <div class="flex-1 max-w-2xl">
+
+            {/*<a target='_blank' href={uri}>Post by {result.author.displayName}</a> on {result.record.createdAt}*/}
+            <Post post={result}/>
           </div>
-          <Post post={result}/>
+          <div class="flex flex-col items-start space-y-2 pl-4">
+              <CopyButton text={JSON.stringify(result)}/>
+              {!!chunkId && <AddPostToChunkButton chunkId={chunkId} postUri={result.uri}/>}
+          </div>
         </div>
-        <hr/>
       </React.Fragment>
     })}
 
