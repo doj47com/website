@@ -51,6 +51,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const handle = url.searchParams.get("handle")?.trim();
   const after = url.searchParams.get("after")?.trim();
   const before = url.searchParams.get("before")?.trim();
+  const offset = url.searchParams.get("offset")?.trim() || '0';
 
   /*
   if (!q) {
@@ -101,7 +102,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 
   const where = whereClauses.length === 0 ? '' : `WHERE ${whereClauses.join(' AND ')}`;
-  const offset = 0;
   return search(
     `SELECT json FROM posts ${where} ORDER BY created_at DESC LIMIT 100 OFFSET ${offset}`,
     ...whereParams

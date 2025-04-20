@@ -27,6 +27,7 @@ export default function Index() {
   const [handle, setHandle] = useState(searchParams.get('handle') || '');
   const [after, setAfter] = useState(searchParams.get('after') || '');
   const [before, setBefore] = useState(searchParams.get('before') || '');
+  const [offset, setOffset] = useState(Number(searchParams.get('offset') || '0'));
   const chunkId = searchParams.get('chunk') || '';
   const [results, setResults] = useState([]);
   const [ms, setMs] = useState(undefined);
@@ -42,7 +43,7 @@ export default function Index() {
 
   function doTheThing(controller?: AbortController) {
     const now = Date.now();
-    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}`, {
+    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}&offset=${offset}`, {
       ...(controller ? { signal: controller.signal } : {}),
     })
       .then((res) => res.json())
@@ -66,6 +67,7 @@ export default function Index() {
       handle,
       after,
       before,
+      offset,
     });
 
     /*
@@ -84,7 +86,7 @@ export default function Index() {
       clearTimeout(delayDebounce);
       controller.abort();
     };
-  }, [value, handle, before, after]);
+  }, [value, handle, before, after, offset]);
   return <Frame>
     <SearchBox value={value} onChange={(value) => setValue(value)}/>
     <div className='max-w-md flex'>
@@ -93,7 +95,13 @@ export default function Index() {
       <SearchBox value={before} onChange={(value) => setBefore(value)} placeholder='Before' width='inline'/>
     </div>
 
-    <p>Results took {ms} ms:</p>
+    <p>Results took {ms} ms.
+      <div>
+        {offset > 0 && <a className='cursor-pointer' onClick={() => setOffset(offset - 100)}>« Prev</a>}
+        <> </>
+        <a className='cursor-pointer' onClick={() => setOffset(offset + 100)}>Next »</a>
+      </div>
+    </p>
     {results.map(result => {
       const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
       return <React.Fragment key={result.uri}>
