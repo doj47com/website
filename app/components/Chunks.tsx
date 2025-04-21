@@ -1,5 +1,7 @@
 import React from 'react';
 import { useChunks } from '~/hooks/useChunks';
+
+import Chunk from '~/components/Chunk';
 import LoggedIn from '~/components/LoggedIn';
 import Post from '~/components/Post';
 import MDXRenderer from '~/components/MDXRenderer';
@@ -45,14 +47,7 @@ export default function Chunks(props: Props) {
   return <>
     {!!newsChunk && <NewsChunk chunk={newsChunk}/>}
     {chunks.filter(chunk => chunk.title !== 'news').map(chunk => {
-      return <React.Fragment key={chunk.id}>
-        <h2>{chunk.title} <MaybeEdit chunkId={chunk.id}/></h2>
-        {!!chunk.body.trim() && <MDXRenderer code={chunk.body}/>}
-        {chunk.posts.map(post => {
-          //return <pre>{JSON.stringify(post)}</pre>;
-          return <Post key={post.uri} post={post.post} stats={false}/>;
-        })}
-      </React.Fragment>
+      return <Chunk key={chunk.id} chunk={chunk} />
     })}
   </>
 }

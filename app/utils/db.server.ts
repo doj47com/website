@@ -90,6 +90,60 @@ export function getChunksBySlug(slug: string): Chunk[] {
   return Array.from(chunksById.values());
 }
 
+export function getRecentChunks(): Chunk[] {
+  // Get each chunk, then also get each tweet.
+  const rows = db.prepare(`
+    SELECT
+      c.id AS chunkId,
+      c.slug,
+      c.ts,
+      c.title,
+      c.body,
+      cp.post_uri AS postUri,
+      cp.is_live_tweet AS liveTweet,
+      cp.is_news_link AS newsLink,
+      p.json AS postJson
+    FROM chunks c
+    LEFT JOIN chunk_posts cp ON cp.chunk_id = c.id
+    LEFT JOIN posts p ON cp.post_uri = p.uri
+    WHERE c.title <> 'news'
+    ORDER BY c.ts DESC, p.created_at DESC
+    LIMIT 10
+  `).all();
+
+  const chunksById = new Map<number, Chunk>();
+
+  for (const row of rows) {
+    let chunk = chunksById.get(row.chunkId);
+
+    if (!chunk) {
+      chunk = {
+        id: row.chunkId,
+        slug: row.slug,
+        ts: row.ts,
+        title: row.title,
+        body: row.body,
+        posts: [],
+      };
+      chunksById.set(row.chunkId, chunk);
+    }
+
+    if (row.postUri) {
+      const post: ChunkPost = {
+        chunkId: row.chunkId,
+        postUri: row.postUri,
+        liveTweet: !!row.liveTweet,
+        newsLink: !!row.newsLink,
+        post: JSON.parse(row.postJson ?? "null"),
+      };
+      chunk.posts.push(post);
+    }
+  }
+
+  return Array.from(chunksById.values());
+}
+
+
 export function setChunkField(id: number, field: string, value: string) {
   const stmt = db.prepare(`UPDATE chunks SET ${field} = ? WHERE id = ?`);
   stmt.run(value, id);

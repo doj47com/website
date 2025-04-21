@@ -1,5 +1,9 @@
-import type { MetaFunction } from "@remix-run/node";
-import Frame from '../components/Frame';
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { getRecentChunks } from '~/utils/db.server';
+import Frame from '~/components/Frame';
+import Chunk from '~/components/Chunk';
 
 export const meta: MetaFunction = () => {
   return [
@@ -8,10 +12,19 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const loader: LoaderFunction = async () => {
+  const recentChunks = getRecentChunks();
+
+  return json({ recentChunks });
+};
+
 export default function Index() {
+  const { recentChunks } = useLoaderData<typeof loader>();
+  console.log(recentChunks);
+
   return <Frame>
     <section>
-      <p>If you work for the Department of Justice, you are not one of America's lawyers, but one of Trump's lawyers.</p>
+      <p>If you work for the Department of Justice, you are not one of <i>America's</i> lawyers, but one of <i>Trump's</i> lawyers.</p>
       <div class="max-w-6xl mx-auto grid gap-8 md:grid-cols-2 mt-2 mb-4">
 
         <blockquote class="flex flex-col justify-between bg-white shadow-md rounded-xl p-6 min-h-full border-l-4 border-gray-300">
@@ -41,21 +54,9 @@ export default function Index() {
 
       </div>
       <p>It turns out, if you work for some Big Law firms, you might be one of his lawyers, too!</p>
-      <p>This website tracks the Trump administration's use of the courts during his second presidency.</p>
-    </section>
-    <section>
-      <h2>Cases</h2>
-      <p>Learn about <a href="/cases/">cases brought by or against the Trump government</a>.</p>
-    </section>
-
-    <section>
-      <h2>Firms</h2>
-      <p>Learn about <a href="/firms/">law firms that have resisted</a> (or not!) the Trump administration's executive orders.</p>
-    </section>
-
-    <section>
-      <h2>Lawyers</h2>
-      <p>Are <a href="/lawyers/">lawyers during the Trump administration</a> covering themselves in glory?</p>
+      <p>This website tracks the Trump administration's use of the courts during his second presidency. You can follow updates on <a href="/cases">cases</a>, <a href="/firms">law firms</a>, or <a href="/lawyers">lawyers</a>.</p>
+      <h1>Recent updates</h1>
+      {recentChunks.map(chunk => <Chunk key={chunk.id} chunk={chunk} foreign={true}/> )}
     </section>
   </Frame>;
 }
