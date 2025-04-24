@@ -32,6 +32,9 @@ export default function Index() {
   const [offset, setOffset] = useState(Number(searchParams.get('offset') || '0'));
   const chunkId = searchParams.get('chunk') || '';
   const [results, setResults] = useState([]);
+  const [likes, setLikes] = useState(searchParams.get('likes') || '');
+  const [reposts, setReposts] = useState(searchParams.get('reposts') || '');
+  const [quotes, setQuotes] = useState(searchParams.get('quotes') || '');
   const [ms, setMs] = useState(undefined);
 
   function updateSearchParams(params) {
@@ -45,7 +48,7 @@ export default function Index() {
 
   function doTheThing(controller?: AbortController) {
     const now = Date.now();
-    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}&offset=${offset}&sort=${sort}&replies=${replies}`, {
+    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}&offset=${offset}&sort=${sort}&replies=${replies}&likes=${likes}&reposts=${reposts}&quotes=${quotes}`, {
       ...(controller ? { signal: controller.signal } : {}),
     })
       .then((res) => res.json())
@@ -72,6 +75,9 @@ export default function Index() {
       offset,
       sort,
       replies,
+      likes,
+      reposts,
+      quotes,
     });
 
     /*
@@ -90,7 +96,7 @@ export default function Index() {
       clearTimeout(delayDebounce);
       controller.abort();
     };
-  }, [value, handle, before, after, offset, sort, replies]);
+  }, [value, handle, before, after, offset, sort, replies, likes, reposts, quotes]);
 
   function PaginationControls() {
     return (
@@ -138,11 +144,16 @@ export default function Index() {
       <SearchBox value={after} onChange={(value) => setAfter(value)} placeholder='After' width='inline'/>
       <SearchBox value={before} onChange={(value) => setBefore(value)} placeholder='Before' width='inline'/>
     </div>
-    <div className='max-w-md'>
-      <label className="inline-flex items-center space-x-2 cursor-pointer">
-        <input type="checkbox" className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value={replies} onChange={(e) => setReplies(e.target.checked ? 1 : 0) }/>
-        <span className="text-gray-800 text-sm">Include non-thread replies</span>
-      </label>
+    <div className='max-w-md flex'>
+      <SearchBox value={likes} onChange={(value) => setLikes(value)} placeholder='Likes' width='inline'/>
+      <SearchBox value={reposts} onChange={(value) => setReposts(value)} placeholder='Reposts' width='inline'/>
+      <SearchBox value={quotes} onChange={(value) => setQuotes(value)} placeholder='Quotes' width='inline'/>
+      <div>
+        <label className="inline-flex items-center space-x-2 cursor-pointer">
+          <input type="checkbox" className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value={replies} onChange={(e) => setReplies(e.target.checked ? 1 : 0) }/>
+          <span className="text-gray-800 text-sm">All replies</span>
+        </label>
+      </div>
     </div>
 
     <p>Results took {ms} ms, sorting <a onClick={() => setSort(sort === 'ASC' ? 'DESC' : 'ASC')} className='cursor-pointer'>{sort === 'ASC' ? 'oldest first' : 'newest first'}</a>.

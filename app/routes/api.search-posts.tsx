@@ -54,6 +54,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const offset = url.searchParams.get("offset")?.trim() || '0';
   const sort = url.searchParams.get("sort")?.trim() || 'DESC';
   const replies = url.searchParams.get("replies")?.trim() || '0';
+  const likes = url.searchParams.get("likes")?.trim() || '0';
+  const reposts = url.searchParams.get("reposts")?.trim() || '0';
+  const quotes = url.searchParams.get("quotes")?.trim() || '0';
 
   /*
   if (!q) {
@@ -109,6 +112,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (replies === '0') {
     whereClauses.push('(is_reply = 0 OR is_reply_to_self = 1)');
+  }
+
+  if (likes > 0) {
+    whereClauses.push('likes >= ?');
+    whereParams.push(likes);
+  }
+
+  if (reposts > 0) {
+    whereClauses.push('reposts >= ?');
+    whereParams.push(reposts);
+  }
+
+  if (quotes > 0) {
+    whereClauses.push('quotes >= ?');
+    whereParams.push(quotes);
   }
 
   const where = whereClauses.length === 0 ? '' : `WHERE ${whereClauses.join(' AND ')}`;
