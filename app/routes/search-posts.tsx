@@ -25,6 +25,7 @@ export default function Index() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sort, setSort] = useState(searchParams.get('sort') || 'DESC');
   const [value, setValue] = useState(searchParams.get('q') || '');
+  const [replies, setReplies] = useState(Number(searchParams.get('replies') || '0'));
   const [handle, setHandle] = useState(searchParams.get('handle') || '');
   const [after, setAfter] = useState(searchParams.get('after') || '');
   const [before, setBefore] = useState(searchParams.get('before') || '');
@@ -44,7 +45,7 @@ export default function Index() {
 
   function doTheThing(controller?: AbortController) {
     const now = Date.now();
-    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}&offset=${offset}&sort=${sort}`, {
+    fetch(`/api/search-posts?q=${encodeURIComponent(value)}&handle=${encodeURIComponent(handle)}&before=${encodeURIComponent(before)}&after=${encodeURIComponent(after)}&offset=${offset}&sort=${sort}&replies=${replies}`, {
       ...(controller ? { signal: controller.signal } : {}),
     })
       .then((res) => res.json())
@@ -70,6 +71,7 @@ export default function Index() {
       before,
       offset,
       sort,
+      replies,
     });
 
     /*
@@ -88,7 +90,7 @@ export default function Index() {
       clearTimeout(delayDebounce);
       controller.abort();
     };
-  }, [value, handle, before, after, offset, sort]);
+  }, [value, handle, before, after, offset, sort, replies]);
 
   function PaginationControls() {
     return (
@@ -136,6 +138,12 @@ export default function Index() {
       <SearchBox value={after} onChange={(value) => setAfter(value)} placeholder='After' width='inline'/>
       <SearchBox value={before} onChange={(value) => setBefore(value)} placeholder='Before' width='inline'/>
     </div>
+    <div className='max-w-md'>
+      <label className="inline-flex items-center space-x-2 cursor-pointer">
+        <input type="checkbox" className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value={replies} onChange={(e) => setReplies(e.target.checked ? 1 : 0) }/>
+        <span className="text-gray-800 text-sm">Include non-thread replies</span>
+      </label>
+    </div>
 
     <p>Results took {ms} ms, sorting <a onClick={() => setSort(sort === 'ASC' ? 'DESC' : 'ASC')} className='cursor-pointer'>{sort === 'ASC' ? 'oldest first' : 'newest first'}</a>.
       <PaginationControls/>
@@ -145,13 +153,13 @@ export default function Index() {
       const uri = `https://bsky.app/profile/${result.uri.replace('at://', '').replace('app.bsky.feed.', '')}`;
       return <React.Fragment key={result.uri}>
         {/*<div className='mb-4'>*/}
-        <div class="flex items-start mb-4">
-          <div class="flex-1 max-w-2xl">
+        <div className="flex items-start mb-4">
+          <div className="flex-1 max-w-2xl">
 
             {/*<a target='_blank' href={uri}>Post by {result.author.displayName}</a> on {result.record.createdAt}*/}
             <Post post={result}/>
           </div>
-          <div class="flex flex-col items-start space-y-2 pl-4">
+          <div className="flex flex-col items-start space-y-2 pl-4">
               <p className='text-2xl'>{Number(offset) + idx + 1}</p>
               <CopyButton text={JSON.stringify(result)}/>
               {!!chunkId && <AddPostToChunkButton chunkId={chunkId} postUri={result.uri}/>}

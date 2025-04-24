@@ -53,6 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const before = url.searchParams.get("before")?.trim();
   const offset = url.searchParams.get("offset")?.trim() || '0';
   const sort = url.searchParams.get("sort")?.trim() || 'DESC';
+  const replies = url.searchParams.get("replies")?.trim() || '0';
 
   /*
   if (!q) {
@@ -106,6 +107,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     whereParams.push(before);
   }
 
+  if (replies === '0') {
+    whereClauses.push('(is_reply = 0 OR is_reply_to_self = 1)');
+  }
 
   const where = whereClauses.length === 0 ? '' : `WHERE ${whereClauses.join(' AND ')}`;
   return search(
