@@ -129,9 +129,9 @@ export default function Index() {
 
     return (
       <div>
-        <a className='cursor-pointer' onClick={() => { setBefore(prevMax); setAfter(prevMin); }}>« Prev Day</a>
+        <a className='cursor-pointer' onClick={() => { setOffset(0); setBefore(prevMax); setAfter(prevMin); }}>« Prev Day</a>
         <> </>
-        <a className='cursor-pointer' onClick={() => { setBefore(nextMax); setAfter(nextMin); } }>Next Day »</a>
+        <a className='cursor-pointer' onClick={() => { setOffset(0); setBefore(nextMax); setAfter(nextMin); } }>Next Day »</a>
       </div>
     )
   }
